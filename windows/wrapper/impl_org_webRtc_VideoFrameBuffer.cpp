@@ -184,7 +184,31 @@ wrapper::org::webRtc::VideoFrameBufferPtr wrapper::org::webRtc::VideoFrameBuffer
   auto buffer = webrtc::I420Buffer::Copy(width, height, py, width, pu, width / 2, pv, width / 2);
   return UseVideoFramePlanarYuvBuffer::toWrapper(buffer.get());
 }
+//------------------------------------------------------------------------------
+wrapper::org::webRtc::VideoFrameBufferPtr
+wrapper::org::webRtc::VideoFrameBuffer::createFromBGRAPtr2(
+    int width,
+    int height,
+    int strideRgb,
+    uint64_t dataPtr) noexcept {
 
+  auto source = reinterpret_cast<uint8_t*>(SafeInt<uintptr_t>(dataPtr).Ref());
+  if (source == nullptr)
+    return nullptr;
+
+  auto stridey = width;
+  auto strideuv = width / 2;
+  auto buffer =
+      webrtc::I420Buffer::Create(width, height, stridey, strideuv, strideuv);
+  
+  int result = libyuv::BGRAToI420(source, strideRgb,
+      buffer->MutableDataY(), stridey,
+      buffer->MutableDataU(), strideuv,
+      buffer->MutableDataV(), strideuv,
+      width, height);
+  assert(result == 0);
+  return UseVideoFramePlanarYuvBuffer::toWrapper(buffer.get());
+}
 //------------------------------------------------------------------------------
 wrapper::org::webRtc::VideoFrameBufferPtr wrapper::org::webRtc::VideoFrameBuffer::createFromABGR(
   int width,
