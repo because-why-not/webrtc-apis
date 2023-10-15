@@ -199,7 +199,7 @@ wrapper::org::webRtc::VideoFrameBuffer::createFromBGRAPtr2(
   auto stridey = width;
   auto strideuv = width / 2;
   auto buffer =
-      webrtc::I420Buffer::Create(width, height, stridey, strideuv, strideuv);
+      webrtc::I420Buffer::Create(width, abs(height), stridey, strideuv, strideuv);
   
   int result = libyuv::BGRAToI420(source, strideRgb,
       buffer->MutableDataY(), stridey,
