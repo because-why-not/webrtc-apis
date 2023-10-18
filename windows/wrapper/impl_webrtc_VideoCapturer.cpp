@@ -1653,12 +1653,17 @@ class VideoCapturer::I420BufferPool {
     const VideoFormat& frameInfo,
     winrt::com_ptr<IMFSample> spMediaSample)
   {
-    rtc::CritScope frame_lock(&frame_cs_);
-    if (is_shutting_down_) {
-      return;
+    {
+      rtc::CritScope frame_lock(&frame_cs_);
+      if (is_shutting_down_) {
+        return;
+      }
     }
 
     rtc::CritScope cs(&apiCs_);
+    if (is_shutting_down_) {
+      return;
+    }
 
     const int32_t width = frameInfo.width;
     const int32_t height = frameInfo.height;
