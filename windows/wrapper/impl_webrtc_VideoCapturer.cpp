@@ -1595,7 +1595,10 @@ class VideoCapturer::I420BufferPool {
 
   //-----------------------------------------------------------------------------
   void VideoCapturer::Stop() {
-    rtc::CritScope cs(&apiCs_);
+    // Moved this below StopCapture. apiCs_ is used by OnIncomingFrame
+    // causing dead-lock when StopCapture calls StopRecordAsync as it
+    // appears to wait for OnIncomingFrame to complete
+    // rtc::CritScope cs(&apiCs_);
     try {
       if (device_->CaptureStarted()) {
         device_->StopCapture();
@@ -1605,6 +1608,8 @@ class VideoCapturer::I420BufferPool {
         << rtc::ToUtf8(e.message().c_str());
       return;
     }
+
+    rtc::CritScope cs(&apiCs_);
     SetCaptureFormat(nullptr);
     SetCaptureState(CS_STOPPED);
   }
@@ -1653,17 +1658,13 @@ class VideoCapturer::I420BufferPool {
     const VideoFormat& frameInfo,
     winrt::com_ptr<IMFSample> spMediaSample)
   {
-    {
-      rtc::CritScope frame_lock(&frame_cs_);
-      if (is_shutting_down_) {
-        return;
-      }
-    }
-
-    rtc::CritScope cs(&apiCs_);
+    //
+    rtc::CritScope frame_lock(&frame_cs_);
     if (is_shutting_down_) {
       return;
     }
+
+    rtc::CritScope cs(&apiCs_);
 
     const int32_t width = frameInfo.width;
     const int32_t height = frameInfo.height;
