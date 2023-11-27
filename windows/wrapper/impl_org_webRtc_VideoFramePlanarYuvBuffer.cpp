@@ -107,6 +107,22 @@ wrapper::org::webRtc::VideoDataPtr WrapperImplType::toRGB24() noexcept
 {
   return UseVideoFrameBuffer::toRGB24(native_);
 }
+//------------------------------------------------------------------------------
+bool WrapperImplType::toDataPtr(bool toAbgr,
+                                uint64_t dataSize,
+                                uint64_t dataPtr) noexcept {
+  return UseVideoFrameBuffer::toDataPtr(native_, toAbgr, dataSize, dataPtr);
+}
+//------------------------------------------------------------------------------
+bool WrapperImplType::toI420pPtr(uint64_t y,
+                                 uint64_t yStride,
+                                 uint64_t u,
+                                 uint64_t uStride,
+                                 uint64_t v,
+                                 uint64_t vStride) noexcept {
+  return UseVideoFrameBuffer::toI420pPtr(native_, y, yStride, u, uStride,
+                                         v, vStride);
+}
 
 //------------------------------------------------------------------------------
 wrapper::org::webRtc::VideoFrameBufferType wrapper::impl::org::webRtc::VideoFramePlanarYuvBuffer::get_type() noexcept

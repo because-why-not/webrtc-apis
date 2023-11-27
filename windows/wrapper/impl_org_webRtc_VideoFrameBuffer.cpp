@@ -332,6 +332,7 @@ wrapper::org::webRtc::VideoFrameBufferPtr wrapper::org::webRtc::VideoFrameBuffer
   return UseVideoFramePlanarYuvBuffer::toWrapper(buffer.get());
 }
 
+
 //------------------------------------------------------------------------------
 wrapper::org::webRtc::VideoFramePlanarYuvBufferPtr wrapper::impl::org::webRtc::VideoFrameBuffer::toI420() noexcept
 {
@@ -361,6 +362,7 @@ wrapper::org::webRtc::VideoDataPtr WrapperImplType::toABGR() noexcept
 }
 
 
+
 //------------------------------------------------------------------------------
 wrapper::org::webRtc::VideoDataPtr WrapperImplType::toRGBA() noexcept
 {
@@ -371,6 +373,23 @@ wrapper::org::webRtc::VideoDataPtr WrapperImplType::toRGBA() noexcept
 wrapper::org::webRtc::VideoDataPtr WrapperImplType::toRGB24() noexcept
 {
   return toRGB24(native_.get());
+}
+
+//------------------------------------------------------------------------------
+bool WrapperImplType::toDataPtr(bool toAbgr,
+    uint64_t dataSize,
+    uint64_t dataPtr) noexcept {
+  return toDataPtr(native_.get(), toAbgr, dataSize, dataPtr);
+}
+
+//------------------------------------------------------------------------------
+bool WrapperImplType::toI420pPtr(uint64_t y,
+                                 uint64_t yStride,
+                                 uint64_t u,
+                                 uint64_t uStride,
+                                 uint64_t v,
+                                 uint64_t vStride) noexcept {
+  return toI420pPtr(native_.get(), y, yStride, u, uStride, v, vStride);
 }
 
 //------------------------------------------------------------------------------
@@ -593,6 +612,7 @@ wrapper::org::webRtc::VideoDataPtr WrapperImplType::toABGR(NativeType *native) n
   return UseVideoData::toWrapper(std::move(buffer), size);
 }
 
+
 //------------------------------------------------------------------------------
 wrapper::org::webRtc::VideoDataPtr WrapperImplType::toRGBA(NativeType *native) noexcept
 {
@@ -645,4 +665,71 @@ wrapper::org::webRtc::VideoDataPtr WrapperImplType::toRGB24(NativeType *native) 
   );
 
   return UseVideoData::toWrapper(std::move(buffer), size);
+}
+
+
+//------------------------------------------------------------------------------
+bool WrapperImplType::toDataPtr(NativeType* native, bool toAbgr,
+    uint64_t dataSize,
+    uint64_t dataPtr) noexcept {
+  
+  if (!native)
+    return false;
+
+  auto destination = reinterpret_cast<uint8_t*>(SafeInt<uintptr_t>(dataPtr).Ref());
+  if (!destination)
+    return false;
+  
+  auto i420 = native->ToI420();
+
+  auto width = i420->width();
+  auto height = i420->height();
+  size_t outputStride = 4 * width;
+
+  auto y = i420->DataY();
+  auto ystride = i420->StrideY();
+  auto u = i420->DataU();
+  auto ustride = i420->StrideU();
+  auto v = i420->DataV();
+  auto vstride = i420->StrideV();
+
+  size_t bytesPerPixel = (sizeof(uint8_t) * 4);
+  size_t size = SafeInt<size_t>(width * height * bytesPerPixel);
+
+
+  libyuv::I420ToABGR(y, ystride,
+      u, ustride, 
+      v, vstride,
+      destination, outputStride,
+      width, height);
+  
+
+  
+
+  for (int i = 0; i < 10; i++) {
+    destination[i * 4 + 0] = 255;
+    destination[i * 4 + 1] = 1;
+    destination[i * 4 + 2] = 255;
+  }
+  return true;
+}
+
+
+bool WrapperImplType::toI420pPtr(NativeType* native,
+    uint64_t y,
+    uint64_t yStride,
+    uint64_t u,
+    uint64_t uStride,
+    uint64_t v,
+    uint64_t vStride) noexcept {
+
+    auto i420 = native->ToI420();
+
+    libyuv::I420Copy(i420->DataY(), i420->StrideY(), 
+        i420->DataU(),i420->StrideU(),
+        i420->DataV(), i420->StrideV(), 
+        (uint8_t*)y, yStride, (uint8_t*)u, uStride, (uint8_t*)v,
+                     vStride,
+        i420->width(), i420->height());
+  return true;
 }

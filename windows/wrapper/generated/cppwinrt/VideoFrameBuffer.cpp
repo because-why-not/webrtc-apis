@@ -327,6 +327,7 @@ Org::WebRtc::IVideoFrameBuffer Org::WebRtc::implementation::VideoFrameBuffer::Cr
   return result;
 }
 
+
 //------------------------------------------------------------------------------
 Org::WebRtc::IVideoFramePlanarYuvBuffer Org::WebRtc::implementation::VideoFrameBuffer::ToI420()
 {
@@ -379,6 +380,41 @@ Org::WebRtc::IVideoData Org::WebRtc::implementation::VideoFrameBuffer::ToRGB24()
   Org::WebRtc::IVideoData result {nullptr};
   result = ::Internal::Helper::ToCppWinrt_Org_WebRtc_VideoData(native_->toRGB24());
   return result;
+}
+
+
+//------------------------------------------------------------------------------
+bool Org::WebRtc::implementation::VideoFrameBuffer::ToDataPtr(
+    bool toAbgr, 
+    uint64_t dataSize,
+    uint64_t dataPtr) {
+  if (!native_) {
+    throw hresult_error(E_POINTER);
+  }
+  return native_->toDataPtr(::Internal::Helper::FromCppWinrt_Bool(toAbgr),
+      ::Internal::Helper::FromCppWinrt_Uint64_t(dataSize),
+      ::Internal::Helper::FromCppWinrt_Uint64_t(dataPtr));
+}
+
+//------------------------------------------------------------------------------
+bool Org::WebRtc::implementation::VideoFrameBuffer::ToI420pPtr(
+    uint64_t y,
+    uint64_t yStride,
+    uint64_t u,
+    uint64_t uStride,
+    uint64_t v,
+    uint64_t vStride)
+{
+  if (!native_) {
+    throw hresult_error(E_POINTER);
+  }
+  return native_->toI420pPtr(
+      ::Internal::Helper::FromCppWinrt_Uint64_t(y),
+      ::Internal::Helper::FromCppWinrt_Uint64_t(yStride),
+      ::Internal::Helper::FromCppWinrt_Uint64_t(u),
+      ::Internal::Helper::FromCppWinrt_Uint64_t(uStride),
+      ::Internal::Helper::FromCppWinrt_Uint64_t(v),
+      ::Internal::Helper::FromCppWinrt_Uint64_t(vStride));
 }
 
 //------------------------------------------------------------------------------

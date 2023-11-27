@@ -9305,6 +9305,13 @@ namespace Org
             /// </summary>
             Org.WebRtc.IVideoData ToRGB24();
 
+            
+            Boolean ToDataPtr(Boolean toAbgr, UInt64 dataSize, UInt64 dataPtr);
+
+            Boolean
+                ToI420pPtr(UInt64 y, UInt64 yStride, UInt64 u,
+                           UInt64 uStride, UInt64 v, UInt64 vStride);
+
             /// <summary>
             /// Gets the video frame type.
             /// </summary>
@@ -9436,6 +9443,7 @@ namespace Org
                 Int32 StrideRgb,
                 Org.WebRtc.IVideoData Data
             );
+
         };
 
         /// <summary>

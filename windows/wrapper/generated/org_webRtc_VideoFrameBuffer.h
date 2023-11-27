@@ -64,12 +64,24 @@ namespace wrapper {
           int strideRgb, 
           wrapper::org::webRtc::VideoDataPtr data
           ) noexcept;
+
+
+
         virtual wrapper::org::webRtc::VideoFramePlanarYuvBufferPtr toI420() noexcept = 0;
         virtual wrapper::org::webRtc::VideoDataPtr toARGB() noexcept = 0;
         virtual wrapper::org::webRtc::VideoDataPtr toBGRA() noexcept = 0;
         virtual wrapper::org::webRtc::VideoDataPtr toABGR() noexcept = 0;
         virtual wrapper::org::webRtc::VideoDataPtr toRGBA() noexcept = 0;
         virtual wrapper::org::webRtc::VideoDataPtr toRGB24() noexcept = 0;
+        virtual bool toDataPtr(bool toAbgr,
+                               uint64_t dataSize,
+                               uint64_t dataPtr) noexcept = 0;
+        virtual bool toI420pPtr(uint64_t y,
+                                uint64_t yStride,
+                                uint64_t u,
+                                uint64_t uStride,
+                                uint64_t v,
+                                uint64_t vStride) noexcept = 0;
 
         virtual wrapper::org::webRtc::VideoFrameBufferType get_type() noexcept = 0;
         virtual int get_width() noexcept = 0;

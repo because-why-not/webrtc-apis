@@ -38,6 +38,15 @@ namespace wrapper {
           wrapper::org::webRtc::VideoDataPtr toABGR() noexcept override;
           wrapper::org::webRtc::VideoDataPtr toRGBA() noexcept override;
           wrapper::org::webRtc::VideoDataPtr toRGB24() noexcept override;
+          bool toDataPtr(bool toAbgr,
+              uint64_t dataSize,
+                         uint64_t dataPtr) noexcept override;
+          bool toI420pPtr(uint64_t y,
+                          uint64_t yStride,
+                          uint64_t u,
+                          uint64_t uStride,
+                          uint64_t v,
+                          uint64_t vStride) noexcept override;
 
           // properties VideoFrameBuffer
           wrapper::org::webRtc::VideoFrameBufferType get_type() noexcept override;

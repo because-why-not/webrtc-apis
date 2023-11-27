@@ -129,6 +129,16 @@ namespace winrt {
             int32_t strideRgb,
             Org::WebRtc::IVideoData const & data
             );
+
+          bool ToDataPtr(bool toAbgr, uint64_t dataSize, uint64_t dataPtr);
+          bool ToI420pPtr(uint64_t y,
+                          uint64_t yStride,
+                          uint64_t u,
+                          uint64_t uStride,
+                          uint64_t v,
+                          uint64_t vStride);
+
+          
           /// <summary>
           /// Convert to a new (or return an existing) I420 frame buffer (if
           /// possible). <summary> </summary>

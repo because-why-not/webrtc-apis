@@ -110,6 +110,24 @@ wrapper::org::webRtc::VideoDataPtr WrapperImplType::toRGB24() noexcept
 }
 
 //------------------------------------------------------------------------------
+bool WrapperImplType::toDataPtr(bool toAbgr,
+                                uint64_t dataSize,
+                                uint64_t dataPtr) noexcept {
+  return UseVideoFrameBuffer::toDataPtr(native_.get(), toAbgr, dataSize,
+                                        dataPtr);
+}
+//------------------------------------------------------------------------------
+bool WrapperImplType::toI420pPtr(uint64_t y,
+                                 uint64_t yStride,
+                                 uint64_t u,
+                                 uint64_t uStride,
+                                 uint64_t v,
+                                 uint64_t vStride) noexcept {
+  return UseVideoFrameBuffer::toI420pPtr(native_.get(), y, yStride, u, uStride, v,
+                                         vStride);
+}
+
+//------------------------------------------------------------------------------
 wrapper::org::webRtc::VideoFrameBufferType wrapper::impl::org::webRtc::VideoFrameNativeBuffer::get_type() noexcept
 {
   ZS_ASSERT(native_);
