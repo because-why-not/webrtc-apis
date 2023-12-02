@@ -186,7 +186,8 @@ wrapper::org::webRtc::VideoFrameBufferPtr wrapper::org::webRtc::VideoFrameBuffer
 }
 //------------------------------------------------------------------------------
 wrapper::org::webRtc::VideoFrameBufferPtr
-wrapper::org::webRtc::VideoFrameBuffer::createFromBGRAPtr2(
+wrapper::org::webRtc::VideoFrameBuffer::createFromDataPtr(
+    int format,
     int width,
     int height,
     int strideRgb,
@@ -200,13 +201,21 @@ wrapper::org::webRtc::VideoFrameBuffer::createFromBGRAPtr2(
   auto strideuv = width / 2;
   auto buffer =
       webrtc::I420Buffer::Create(width, abs(height), stridey, strideuv, strideuv);
-  
-  int result = libyuv::BGRAToI420(source, strideRgb,
-      buffer->MutableDataY(), stridey,
-      buffer->MutableDataU(), strideuv,
-      buffer->MutableDataV(), strideuv,
-      width, height);
-  assert(result == 0);
+  if (format == 1) {
+    int result =
+        libyuv::BGRAToI420(source, strideRgb, buffer->MutableDataY(), stridey,
+                           buffer->MutableDataU(), strideuv,
+                           buffer->MutableDataV(), strideuv, width, height);
+    assert(result == 0);
+  } else if (format == 2) {
+    int result =
+        libyuv::ABGRToI420(source, strideRgb, buffer->MutableDataY(), stridey,
+                           buffer->MutableDataU(), strideuv,
+                           buffer->MutableDataV(), strideuv, width, height);
+    assert(result == 0);
+  } else {
+    assert(false && "Invalid format");
+  }
   return UseVideoFramePlanarYuvBuffer::toWrapper(buffer.get());
 }
 //------------------------------------------------------------------------------

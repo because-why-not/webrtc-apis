@@ -106,7 +106,8 @@ namespace winrt {
             int32_t height,
             int32_t strideRgb,
             Org::WebRtc::IVideoData const & data);
-          static Org::WebRtc::IVideoFrameBuffer CreateFromBGRA2Ptr(
+          static Org::WebRtc::IVideoFrameBuffer CreateFromDataPtr(
+              int32_t format,
               int32_t width,
               int32_t height,
               int32_t strideRgb,

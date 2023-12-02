@@ -9416,7 +9416,8 @@ namespace Org
                 Int32 StrideRgb,
                 Org.WebRtc.IVideoData Data
             );
-            static Org.WebRtc.IVideoFrameBuffer CreateFromBGRA2Ptr(
+            static Org.WebRtc.IVideoFrameBuffer CreateFromDataPtr(
+                Int32 Format,
                 Int32 Width,
                 Int32 Height,
                 Int32 StrideRgb,

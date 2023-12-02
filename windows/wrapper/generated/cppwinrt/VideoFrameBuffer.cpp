@@ -271,7 +271,8 @@ Org::WebRtc::IVideoFrameBuffer Org::WebRtc::implementation::VideoFrameBuffer::Cr
 
 //------------------------------------------------------------------------------
 Org::WebRtc::IVideoFrameBuffer
-Org::WebRtc::implementation::VideoFrameBuffer::CreateFromBGRA2Ptr(
+Org::WebRtc::implementation::VideoFrameBuffer::CreateFromDataPtr(
+    int32_t format,
     int32_t width,
     int32_t height,
     int32_t strideRgb,
@@ -279,7 +280,8 @@ Org::WebRtc::implementation::VideoFrameBuffer::CreateFromBGRA2Ptr(
   Org::WebRtc::IVideoFrameBuffer result{nullptr};
   
   result = ::Internal::Helper::ToCppWinrt_Org_WebRtc_VideoFrameBuffer(
-      wrapper::org::webRtc::VideoFrameBuffer::createFromBGRAPtr2(
+      wrapper::org::webRtc::VideoFrameBuffer::createFromDataPtr(
+          ::Internal::Helper::FromCppWinrt_Int(format),
           ::Internal::Helper::FromCppWinrt_Int(width),
           ::Internal::Helper::FromCppWinrt_Int(height),
           ::Internal::Helper::FromCppWinrt_Int(strideRgb),

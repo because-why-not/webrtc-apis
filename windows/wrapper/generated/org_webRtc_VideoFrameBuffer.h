@@ -40,7 +40,8 @@ namespace wrapper {
           int strideRgb, 
           wrapper::org::webRtc::VideoDataPtr data
           ) noexcept;
-        static wrapper::org::webRtc::VideoFrameBufferPtr createFromBGRAPtr2(
+        static wrapper::org::webRtc::VideoFrameBufferPtr createFromDataPtr(
+          int format,
           int width, 
           int height, 
           int strideRgb, 
